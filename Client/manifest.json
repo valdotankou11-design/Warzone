@@ -2,6 +2,7 @@
   "name": "WarZone",
   "short_name": "WarZone",
   "description": "Mini jeu de guerre stratégique — Solo vs IA & Multijoueur en ligne",
+  "author": "SOH TANKOU JOËL VALDO",
   "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#07090a",
