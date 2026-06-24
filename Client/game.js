@@ -1,6 +1,6 @@
 // game.js — WarZone v3
 
-const SERVER_URL = 'https://warzone-server.onrender.com'; // ← Remplace après déploiement
+const SERVER_URL = 'https://warzone-tzun.onrender.com'; // ← Remplace après déploiement
 
 const GRID = 13;
 const EMOJIS = ['👍','😂','😤','💀','🔥','😱','🤝','👏','😈','💪','🫡','🤡'];
