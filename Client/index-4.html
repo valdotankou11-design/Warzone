@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="theme-color" content="#1e5c1a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="WarZone" />
+  <title>WarZone ⚔️</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ══════════════════ SVG DEFS (réutilisables) ══════════════════ -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Infanterie -->
+    <symbol id="svg-infantry" viewBox="0 0 32 32">
+      <!-- Corps -->
+      <ellipse cx="16" cy="22" rx="7" ry="5" fill="currentColor" opacity="0.9"/>
+      <!-- Tête -->
+      <circle cx="16" cy="11" r="5" fill="currentColor"/>
+      <!-- Casque -->
+      <ellipse cx="16" cy="8.5" rx="6" ry="3.5" fill="currentColor" opacity="0.85"/>
+      <rect x="10" y="8" width="12" height="2" rx="1" fill="currentColor" opacity="0.7"/>
+      <!-- Fusil -->
+      <rect x="20" y="10" width="9" height="2" rx="1" fill="currentColor" opacity="0.75" transform="rotate(-10 20 11)"/>
+      <rect x="27" y="8" width="2" height="5" rx="0.5" fill="currentColor" opacity="0.6" transform="rotate(-10 28 10)"/>
+    </symbol>
+
+    <!-- Tank -->
+    <symbol id="svg-tank" viewBox="0 0 32 32">
+      <!-- Chenilles -->
+      <rect x="2" y="20" width="28" height="6" rx="3" fill="currentColor" opacity="0.5"/>
+      <!-- Corps principal -->
+      <rect x="4" y="15" width="24" height="9" rx="2" fill="currentColor" opacity="0.9"/>
+      <!-- Tourelle -->
+      <ellipse cx="16" cy="14" rx="8" ry="5" fill="currentColor"/>
+      <!-- Canon -->
+      <rect x="16" y="12" width="13" height="3" rx="1.5" fill="currentColor" opacity="0.85"/>
+      <!-- Hublot -->
+      <circle cx="13" cy="14" r="2" fill="rgba(0,0,0,0.4)"/>
+    </symbol>
+
+    <!-- Artillerie -->
+    <symbol id="svg-artillery" viewBox="0 0 32 32">
+      <!-- Base / roues -->
+      <circle cx="8" cy="24" r="4" fill="currentColor" opacity="0.6"/>
+      <circle cx="24" cy="24" r="4" fill="currentColor" opacity="0.6"/>
+      <!-- Affût -->
+      <rect x="6" y="19" width="20" height="5" rx="2" fill="currentColor" opacity="0.8"/>
+      <!-- Corps pièce -->
+      <rect x="8" y="14" width="16" height="6" rx="2" fill="currentColor" opacity="0.9"/>
+      <!-- Long canon incliné -->
+      <rect x="14" y="7" width="16" height="4" rx="2" fill="currentColor" transform="rotate(-15 14 9)"/>
+      <!-- Bouche du canon -->
+      <circle cx="28" cy="6" r="2.5" fill="currentColor" opacity="0.7" transform="rotate(-15 14 9) translate(13,-3)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ══════════════════ HOME ══════════════════ -->
+<div id="screen-home" class="screen">
+  <div class="scanlines"></div>
+  <div class="logo">
+    <h1>WARZONE</h1>
+    <p class="logo-sub">STRATÉGIE &nbsp;•&nbsp; TACTIQUE &nbsp;•&nbsp; CONQUÊTE &nbsp;<span>█</span></p>
+  </div>
+  <div class="home-buttons">
+    <button class="btn btn-primary" onclick="startSolo()">
+      <svg width="18" height="18" viewBox="0 0 32 32" fill="currentColor" opacity="0.85"><use href="#svg-tank"/></svg>
+      Mode Solo — vs IA
+    </button>
+    <button class="btn btn-amber" onclick="showOnlineMenu()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      Mode En Ligne
+    </button>
+  </div>
+  <div style="position:relative;z-index:2;color:var(--text-dim);font-size:0.72rem;letter-spacing:0.2em;font-family:'Share Tech Mono',monospace">
+    v2.0 &nbsp;—&nbsp; PWA READY
+  </div>
+</div>
+
+<!-- ══════════════════ ONLINE ══════════════════ -->
+<div id="screen-online" class="screen">
+  <h2>⚔ Multijoueur</h2>
+  <span id="online-status">Connexion au serveur…</span>
+
+  <div class="online-panel" style="max-width:460px;width:100%">
+    <h3>Identité</h3>
+    <input id="pseudo-input" class="input-field" type="text" maxlength="20" placeholder="Ton pseudo de combat…" autocomplete="off"/>
+  </div>
+
+  <div class="online-panel" style="max-width:460px;width:100%">
+    <h3>Créer une partie</h3>
+    <input id="room-name-input" class="input-field" type="text" maxlength="30" placeholder="Nom de la partie (optionnel)" autocomplete="off"/>
+    <button class="btn btn-primary" onclick="createRoom()">+ Créer et attendre un adversaire</button>
+  </div>
+
+  <div class="online-panel" style="max-width:460px;width:100%;flex:1;min-height:0">
+    <h3>Parties en attente</h3>
+    <div id="lobby-list"><p class="no-rooms">Chargement du lobby…</p></div>
+  </div>
+
+  <button class="btn btn-secondary" onclick="showScreen('screen-home')" style="max-width:460px;width:100%">← Retour</button>
+</div>
+
+<!-- ══════════════════ WAITING ══════════════════ -->
+<div id="screen-waiting" class="screen">
+  <h2>Partie créée !</h2>
+  <div class="room-code-box">
+    <p class="room-code-label">ID DE PARTIE</p>
+    <div id="waiting-room-id">——</div>
+  </div>
+  <p class="pulse">⏳ En attente d'un adversaire…</p>
+  <p style="color:var(--text-dim);font-size:0.78rem;text-align:center;max-width:300px;font-family:'Share Tech Mono',monospace;line-height:1.6">
+    Partage cet ID avec un ami ou attends qu'il apparaisse dans le lobby.
+  </p>
+  <button class="btn btn-secondary" onclick="backToHome()">✕ Annuler</button>
+</div>
+
+<!-- ══════════════════ GAME ══════════════════ -->
+<div id="screen-game" class="screen">
+
+  <!-- HUD -->
+  <div id="hud">
+    <span id="hud-turn">TOUR 1</span>
+    <div class="hud-resources">
+      <div class="hud-res-item">
+        <div class="hud-res-dot dot-blue"></div>
+        <span id="hud-res-p0">10</span>
+      </div>
+      <div class="hud-res-item">
+        <div class="hud-res-dot dot-red"></div>
+        <span id="hud-res-p1">10</span>
+      </div>
+    </div>
+    <button id="btn-end-turn" class="btn btn-amber" onclick="endTurn()">Fin de tour ▶</button>
+    <button class="btn-home-small" onclick="backToHome()">✕ Quitter</button>
+  </div>
+
+  <!-- Body -->
+  <div id="game-body">
+    <div id="grid-area">
+      <div id="hex-grid"></div>
+    </div>
+
+    <div id="sidebar">
+      <!-- Joueurs -->
+      <div class="sidebar-section">
+        <h3>Joueurs</h3>
+        <div class="legend">
+          <div class="legend-item"><div class="legend-swatch sw-p0"></div><span id="label-p0">Vous</span></div>
+          <div class="legend-item"><div class="legend-swatch sw-p1"></div><span id="label-p1">IA</span></div>
+        </div>
+      </div>
+
+      <!-- Unités -->
+      <div class="sidebar-section">
+        <h3>Unités</h3>
+        <div class="unit-legend">
+          <div class="unit-legend-row">
+            <svg viewBox="0 0 32 32" fill="#8ab"><use href="#svg-infantry"/></svg>
+            Infanterie · ATK 3 · ×2
+          </div>
+          <div class="unit-legend-row">
+            <svg viewBox="0 0 32 32" fill="#8ab"><use href="#svg-tank"/></svg>
+            Tank · ATK 6 · ×3
+          </div>
+          <div class="unit-legend-row">
+            <svg viewBox="0 0 32 32" fill="#8ab"><use href="#svg-artillery"/></svg>
+            Artillerie · ATK 8 · ×1
+          </div>
+        </div>
+      </div>
+
+      <!-- Terrain -->
+      <div class="sidebar-section">
+        <h3>Terrain</h3>
+        <div class="legend">
+          <div class="legend-item"><div class="legend-swatch sw-forest"></div>Forêt −30% dégâts</div>
+          <div class="legend-item"><div class="legend-swatch sw-mountain"></div>Montagne −50% dégâts</div>
+        </div>
+      </div>
+
+      <!-- Journal -->
+      <div class="sidebar-section" id="sidebar-log" style="flex:1;overflow:hidden;display:flex;flex-direction:column">
+        <h3>Journal</h3>
+        <div id="battle-log"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ RESULT ══════════════════ -->
+<div id="screen-result" class="screen">
+  <div class="result-content">
+    <div id="result-title" class="victory">🏆 VICTOIRE</div>
+    <div id="result-subtitle">Vous remportez la bataille !</div>
+    <div class="result-buttons">
+      <button class="btn btn-primary" onclick="startSolo()">Rejouer</button>
+      <button class="btn btn-secondary" onclick="backToHome()">Accueil</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script src="ai.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
