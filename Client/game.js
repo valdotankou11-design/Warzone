@@ -1,6 +1,6 @@
 // game.js — WarZone v3
 
-const SERVER_URL = 'https://warzone-tzun.onrender.com'; // ← Remplace après déploiement
+const SERVER_URL = 'https://warzone-server.onrender.com'; // ← Remplace après déploiement
 
 const GRID = 13;
 const EMOJIS = ['👍','😂','😤','💀','🔥','😱','🤝','👏','😈','💪','🫡','🤡'];
@@ -206,16 +206,22 @@ function createInitialGameState() {
     const stats = {infantry:{hp:10,maxHp:10},tank:{hp:15,maxHp:15},artillery:{hp:8,maxHp:8},sniper:{hp:7,maxHp:7}};
     grid[r][c].unit = {type,owner,...stats[type],moved:false};
   }
-  // Player 0 bottom
-  place(GRID-1,1,'infantry',0); place(GRID-1,3,'tank',0); place(GRID-1,5,'artillery',0);
-  place(GRID-1,7,'tank',0);     place(GRID-1,9,'infantry',0); place(GRID-1,11,'sniper',0);
-  place(GRID-2,2,'infantry',0); place(GRID-2,6,'infantry',0); place(GRID-2,10,'infantry',0);
-  place(GRID-3,4,'tank',0);
-  // Player 1 top
-  place(0,1,'infantry',1); place(0,3,'tank',1); place(0,5,'artillery',1);
-  place(0,7,'tank',1);     place(0,9,'infantry',1); place(0,11,'sniper',1);
-  place(1,2,'infantry',1); place(1,6,'infantry',1); place(1,10,'infantry',1);
-  place(2,4,'tank',1);
+  // Player 0 bottom — 16 unités
+  place(GRID-1,0,'infantry',0); place(GRID-1,2,'tank',0);     place(GRID-1,4,'artillery',0);
+  place(GRID-1,6,'infantry',0); place(GRID-1,8,'tank',0);     place(GRID-1,10,'artillery',0);
+  place(GRID-1,12,'sniper',0);
+  place(GRID-2,1,'infantry',0); place(GRID-2,5,'tank',0);     place(GRID-2,7,'infantry',0);
+  place(GRID-2,11,'infantry',0);
+  place(GRID-3,3,'tank',0);     place(GRID-3,6,'sniper',0);   place(GRID-3,9,'infantry',0);
+  place(GRID-4,2,'infantry',0); place(GRID-4,8,'artillery',0);
+  // Player 1 top — 16 unités
+  place(0,0,'infantry',1);  place(0,2,'tank',1);     place(0,4,'artillery',1);
+  place(0,6,'infantry',1);  place(0,8,'tank',1);     place(0,10,'artillery',1);
+  place(0,12,'sniper',1);
+  place(1,1,'infantry',1);  place(1,5,'tank',1);     place(1,7,'infantry',1);
+  place(1,11,'infantry',1);
+  place(2,3,'tank',1);      place(2,6,'sniper',1);   place(2,9,'infantry',1);
+  place(3,2,'infantry',1);  place(3,8,'artillery',1);
 
   return { grid, currentTurn:0, turnNumber:1, resources:[15,15], log:[], winner:null };
 }
