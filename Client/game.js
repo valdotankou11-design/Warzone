@@ -1,6 +1,6 @@
 // game.js — WarZone v2 — Logique principale
 
-const SERVER_URL = 'https://warzone-server.onrender.com'; // ← Remplace après déploiement
+const SERVER_URL = 'https://warzone-tzun.onrender.com'; // ← Remplace après déploiement
 
 // ─── État global ────────────────────────────────────────────────
 let mode = null;
